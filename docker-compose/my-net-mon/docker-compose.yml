@@ -1,0 +1,24 @@
+version: '3'
+services:
+  my-net-mon:
+    image: 471112905793.dkr.ecr.ap-southeast-1.amazonaws.com/myrepo/my-net-mon
+    container_name: my-net-mon
+    volumes:
+      - /home/ubuntu/logfiles:/opt/logfiles
+    command: ["-w"]    
+    networks:
+      - opensearch-net
+
+  logstash:
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin:7.16.2
+    container_name: logstash
+    volumes:
+      - /home/ubuntu/logfiles:/usr/share/logstash/logfiles
+    ports:
+      - 5400:5400
+    command: ["logstash", "-f", "/usr/share/logstash/logfiles/json-read.conf"]    
+    networks:
+      - opensearch-net
+
+networks:
+  opensearch-net:
