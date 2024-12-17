@@ -5,14 +5,10 @@ services:
     container_name: opensearch
     environment:
       - discovery.type=single-node
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Pr@y@g_11  # Provide a strong initial admin password
-      - plugins.security.disabled=false             # Ensure security plugin is enabled
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Pr@y@g_11
     ports:
       - 9200:9200
       - 9300:9300
-    volumes:
-      - opensearch-data:/usr/share/opensearch/data   # Persistent data volume
-      - opensearch-config:/usr/share/opensearch/config # Persistent config volume
     networks:
       - opensearch-net
 
@@ -21,7 +17,6 @@ services:
     container_name: opensearch-dashboard
     environment:
       - OPENSEARCH_HOSTS=https://opensearch:9200
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Pr@y@g_11  # Set the same password for Dashboards
     ports:
       - 5601:5601
     networks:
@@ -29,7 +24,3 @@ services:
 
 networks:
   opensearch-net:
-
-volumes:
-  opensearch-data:
-  opensearch-config:
