@@ -13,7 +13,7 @@ services:
     image: opensearchproject/logstash-oss-with-opensearch-output-plugin:7.16.2
     container_name: logstash
     volumes:
-      - /home/ubuntu/logfiles:/usr/share/logstash/logfiles
+      - /home/nova056/Desktop/NetworkTrafficVisualization/logfiles:/usr/share/logstash/logfiles
     ports:
       - 5400:5400
     command: ["logstash", "-f", "/usr/share/logstash/logfiles/json-read.conf"]    
