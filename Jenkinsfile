@@ -83,7 +83,7 @@ pipeline {
                 echo 'Starting Docker Compose on my-net-mon...'
                 script {
                     try {
-                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/') {
+                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose') {
                             sh 'docker compose -f docker-compose.yml up -d'
                         }
                     } catch (Exception e) {
