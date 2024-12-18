@@ -45,10 +45,10 @@ pipeline {
                 script {
                     try {
                         // Authenticate with AWS ECR
-                        sh """
-                        echo 'Logging in to AWS ECR...'
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                        """
+                        // sh """
+                        // echo 'Logging in to AWS ECR...'
+                        // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                        // """
 
                         // Build the Docker image
                         sh """
