@@ -37,8 +37,8 @@ pipeline {
             }
         }
 
-        // Stage 1: Build and Push Docker Image on my-net-mon
-        stage('Build and Push Docker Image') {
+        // Stage 1: Build Docker Image on my-net-mon
+        stage('Build Docker Image') {
             agent { label 'my-net-mon' }
             steps {
                 echo 'Building Docker image on my-net-mon...'
@@ -55,13 +55,13 @@ pipeline {
                         docker build -t ${ECR_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} /home/ubuntu/Dockerfile
                         """
 
-                        echo 'Pushing Docker image to ECR...'
-                        // Push the Docker image to ECR
-                        sh """
-                        docker push ${ECR_REGISTRY}/${REPO_NAME}:${IMAGE_TAG}
-                        """
+                        // Commented out pushing the Docker image
+                        // echo 'Pushing Docker image to ECR...'
+                        // sh """
+                        // docker push ${ECR_REGISTRY}/${REPO_NAME}:${IMAGE_TAG}
+                        // """
                     } catch (Exception e) {
-                        error "Failed during Build and Push Docker Image: ${e.message}"
+                        error "Failed during Build Docker Image: ${e.message}"
                     }
                 }
             }
