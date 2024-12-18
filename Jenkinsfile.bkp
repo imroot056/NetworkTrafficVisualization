@@ -9,34 +9,6 @@ pipeline {
     }
 
     stages {
-        // Stage 0: Pull the latest repository updates
-        stage('Git Pull on Both Nodes') {
-            parallel {
-                stage('Git Pull on my-net-mon') {
-                    agent { label 'my-net-mon' }
-                    steps {
-                        echo 'Performing git pull on my-net-mon...'
-                        script {
-                            dir('/home/ubuntu/NetworkTrafficVisualization') {
-                                sh 'git pull'
-                            }
-                        }
-                    }
-                }
-                stage('Git Pull on visualization-server') {
-                    agent { label 'visualization-server' }
-                    steps {
-                        echo 'Performing git pull on visualization-server...'
-                        script {
-                            dir('/home/ubuntu/NetworkTrafficVisualization') {
-                                sh 'git pull'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         // Stage 1: Build and Push Docker Image on my-net-mon
         stage('Build and Push Docker Image') {
             agent { label 'my-net-mon' }
@@ -131,3 +103,4 @@ pipeline {
         }
     }
 }
+
