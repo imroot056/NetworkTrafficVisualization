@@ -66,7 +66,7 @@ pipeline {
                 echo 'Starting Docker Compose on visualization-server...'
                 script {
                     try {
-                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/visualization-server') {
+                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose') {
                             sh 'docker compose -f docker-compose.yml up -d'
                         }
                     } catch (Exception e) {
@@ -83,7 +83,7 @@ pipeline {
                 echo 'Starting Docker Compose on my-net-mon...'
                 script {
                     try {
-                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/my-net-mon') {
+                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/') {
                             sh 'docker compose -f docker-compose.yml up -d'
                         }
                     } catch (Exception e) {
@@ -117,9 +117,49 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded.'
+            mail to: 'imroot056@gmail.com', 
+                subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                body: """
+                Hello,
+
+                The Jenkins pipeline build has successfully completed.
+
+                Details:
+                - Job Name: ${env.JOB_NAME}
+                - Build Number: ${env.BUILD_NUMBER}
+                - Repository: ${REPO_NAME}
+                - Image Tag: ${IMAGE_TAG}
+                - Duration: ${currentBuild.durationString}
+
+                Logs and details can be accessed at: ${env.BUILD_URL}
+
+                Best regards,
+                Jenkins
+                """
         }
         failure {
             echo 'Pipeline failed.'
+            mail to: 'imroot056@gmail.com', 
+                subject: "Build Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                body: """
+                Hello,
+
+                The Jenkins pipeline build has failed.
+
+                Details:
+                - Job Name: ${env.JOB_NAME}
+                - Build Number: ${env.BUILD_NUMBER}
+                - Repository: ${REPO_NAME}
+                - Image Tag: ${IMAGE_TAG}
+                - Duration: ${currentBuild.durationString}
+
+                Logs and failure details can be accessed at: ${env.BUILD_URL}
+
+                Please check the logs and fix the issue.
+
+                Best regards,
+                Jenkins
+                """
         }
     }
 }
