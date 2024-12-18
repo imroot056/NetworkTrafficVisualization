@@ -47,11 +47,11 @@ pipeline {
                         docker build -t ${REPO_NAME}:${IMAGE_TAG} /home/ubuntu/Dockerfile
                         """
 
-                        // Commented out pushing the Docker image
-                        // echo 'Pushing Docker image to Docker Container Registry...'
-                        // sh """
-                        // docker push ${REPO_NAME}:${IMAGE_TAG}
-                        // """
+                        // Push the Docker image
+                        echo 'Pushing Docker image to Docker Container Registry...'
+                        sh """
+                        docker push ${REPO_NAME}:${IMAGE_TAG}
+                        """
                     } catch (Exception e) {
                         error "Failed during Build Docker Image: ${e.message}"
                     }
@@ -104,7 +104,7 @@ pipeline {
                         echo 'Removing dangling Docker images...'
                         docker image prune -af
                         echo 'Cleaning images older than 7 days...'
-                        docker images | grep '<none>' | awk '{print $3}' | xargs -r docker rmi
+                        docker images | grep '<none>' | awk '{print \$3}' | xargs -r docker rmi
                         """
                     } catch (Exception e) {
                         error "Failed during Docker Image Cleanup: ${e.message}"
