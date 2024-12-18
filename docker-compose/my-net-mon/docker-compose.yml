@@ -1,11 +1,11 @@
 version: '3'
 services:
   my-net-mon:
-    image: 471112905793.dkr.ecr.ap-southeast-1.amazonaws.com/myrepo/my-net-mon
+    image: ghcr.io/imroot056/networktrafficvisualization/my-net-mon
     container_name: my-net-mon
     volumes:
       - /home/ubuntu/logfiles:/opt/logfiles
-    command: ["-w"]    
+    command: ["-w"]
     networks:
       - opensearch-net
 
@@ -16,7 +16,7 @@ services:
       - /home/nova056/Desktop/NetworkTrafficVisualization/logfiles:/usr/share/logstash/logfiles
     ports:
       - 5400:5400
-    command: ["logstash", "-f", "/usr/share/logstash/logfiles/json-read.conf"]    
+    command: ["logstash", "-f", "/usr/share/logstash/logfiles/json-read.conf"]
     networks:
       - opensearch-net
 
