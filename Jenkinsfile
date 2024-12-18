@@ -66,7 +66,7 @@ pipeline {
                 echo 'Starting Docker Compose on visualization-server...'
                 script {
                     try {
-                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose') {
+                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/visualization-server') {
                             sh 'docker compose -f docker-compose.yml up -d'
                         }
                     } catch (Exception e) {
@@ -83,7 +83,7 @@ pipeline {
                 echo 'Starting Docker Compose on my-net-mon...'
                 script {
                     try {
-                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/') {
+                        dir('/home/ubuntu/NetworkTrafficVisualization/docker-compose/my-net-mon') {
                             sh 'docker compose -f docker-compose.yml up -d'
                         }
                     } catch (Exception e) {
