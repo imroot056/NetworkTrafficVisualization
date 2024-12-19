@@ -1,8 +1,21 @@
 import time
 from scapy.all import *
+import docker
 
-# Target IP address
-target_ip = "172.18.0.2"  # Change this to the target IP address
+# Function to get Docker container IP address
+def get_container_ip(container_name):
+    client = docker.from_env()
+    try:
+        container = client.containers.get(container_name)
+        ip_address = container.attrs['NetworkSettings']['IPAddress']
+        print(f"Found container '{container_name}' with IP: {ip_address}")
+        return ip_address
+    except docker.errors.NotFound:
+        print(f"Container '{container_name}' not found.")
+        exit(1)
+
+# Get target IP dynamically
+target_ip = get_container_ip("my-net-mon")
 
 # Function to send ICMP (Ping) packet
 def send_icmp():
@@ -44,7 +57,7 @@ def send_ftp():
 def send_dhcp():
     pkt = Ether()/IP(src="0.0.0.0", dst="255.255.255.255")/UDP(sport=68, dport=67)/BOOTP(chaddr="00:11:22:33:44:55")/DHCP(options=[("message-type", "discover"), "end"])
     sendp(pkt, verbose=False)
-    print("Sent DHCP Discover packet to", target_ip)
+    print("Sent DHCP Discover packet to broadcast")
 
 # Main function to continuously send packets
 def continuous_packets():
@@ -60,7 +73,6 @@ def continuous_packets():
             time.sleep(1)  # Sleep for 1 second before sending more packets
     except KeyboardInterrupt:
         print("\nKeyboardInterrupt detected. Stopping packet sending.")
-        # Clean-up code (if necessary) goes here
 
 if __name__ == "__main__":
     print("Starting to send continuous packets to", target_ip)
