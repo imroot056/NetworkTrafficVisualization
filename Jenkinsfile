@@ -44,7 +44,7 @@ pipeline {
                     try {
                         // Build the Docker image
                         sh """
-                        docker build -t ${REPO_NAME}:${IMAGE_TAG} /home/ubuntu/Dockerfile
+                        docker build -t ${REPO_NAME}:${IMAGE_TAG} /home/ubuntu/Desktop/NetworkTrafficVisualization/Dockerfile
                         """
 
                         // Push the Docker image
