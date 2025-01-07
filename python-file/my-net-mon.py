@@ -3,13 +3,6 @@
 The Network Traffic Visualization Program which is Written in Python3 can be a used to Visualize the 
 Incomming and Outgoing Network Traffice in any particular device using attractive Kibana dashboard
 '''
-
-
-'''This is the change made'''
-
-'''This is second change'''
-
-
 #The module Scapy is used for Network Programming in the project
 from scapy.all import *
 #Time is used to mantain time of log files
