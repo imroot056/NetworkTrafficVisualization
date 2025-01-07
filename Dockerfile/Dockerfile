@@ -30,7 +30,4 @@ RUN mkdir logfiles
 # Set entrypoint to activate the virtual environment and run the application
 ENTRYPOINT ["/opt/venv/bin/python3", "my-net-mon.py"]
 
-# Set the entry point and default command
-#ENTRYPOINT ["python3", "my-net-mon.py"]
-
 CMD ["-w"]
