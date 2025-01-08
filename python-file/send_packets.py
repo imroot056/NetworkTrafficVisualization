@@ -37,59 +37,69 @@ def random_ip():
     return ".".join(str(random.randint(1, 254)) for _ in range(4))
 
 # Packet sending functions
-def send_tcp():
-    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=80, flags="S")
+def send_tcp(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=80, flags="S")
     send(pkt, verbose=False)
     print("Sent TCP packet to", target_ip, "from", pkt[IP].src)
 
-def send_udp():
-    pkt = IP(dst=target_ip, src=random_ip())/UDP(dport=53)/Raw(load="GET / HTTP/1.1\r\n")
+def send_udp(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/UDP(dport=53)/Raw(load="GET / HTTP/1.1\r\n")
     send(pkt, verbose=False)
     print("Sent UDP packet to", target_ip, "from", pkt[IP].src)
 
-def send_icmp():
-    pkt = IP(dst=target_ip, src=random_ip())/ICMP()
+def send_icmp(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/ICMP()
     send(pkt, verbose=False)
     print("Sent ICMP packet to", target_ip, "from", pkt[IP].src)
 
-def send_ftp():
-    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=21, flags="S")
+def send_ftp(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=21, flags="S")
     send(pkt, verbose=False)
     print("Sent FTP packet to", target_ip, "from", pkt[IP].src)
 
-def send_ssh():
-    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=22, flags="S")
+def send_ssh(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=22, flags="S")
     send(pkt, verbose=False)
     print("Sent SSH packet to", target_ip, "from", pkt[IP].src)
 
-def send_telnet():
-    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=23, flags="S")
+def send_telnet(src_ip):
+    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=23, flags="S")
     send(pkt, verbose=False)
     print("Sent Telnet packet to", target_ip, "from", pkt[IP].src)
 
-def send_arp():
-    pkt = ARP(op=1, pdst=target_ip, psrc=random_ip())  # Replace with your gateway IP
+def send_arp(src_ip):
+    pkt = ARP(op=1, pdst=target_ip, psrc=src_ip)  # Replace with your gateway IP
     send(pkt, verbose=False)
     print("Sent ARP packet to", target_ip, "from", pkt[ARP].psrc)
 
 # Main function to continuously send packets
 def continuous_packets():
     counter = 0
+    packet_count = 0
+    current_src_ip = random_ip()
     try:
         while True:
-            send_tcp()
-            send_udp()
+            send_tcp(current_src_ip)
+            send_udp(current_src_ip)
 
             if counter % 10 == 0:  # Every 10th iteration (10 seconds)
-                send_ftp()
-                send_ssh()
-                send_telnet()
+                send_ftp(current_src_ip)
+                send_ssh(current_src_ip)
+                send_telnet(current_src_ip)
 
             if counter % 30 == 0:  # Every 30th iteration (30 seconds)
-                send_icmp()
+                send_icmp(current_src_ip)
 
             if counter % 60 == 0:  # Every 60th iteration (1 minute)
-                send_arp()
+                send_arp(current_src_ip)
+
+            packet_count += 1
+
+            # Change source IP after 50 packets
+            if packet_count >= 50:
+                current_src_ip = random_ip()
+                packet_count = 0
+                print("Switched to new source IP:", current_src_ip)
 
             counter += 1
             time.sleep(1)  # Sleep for 1 second

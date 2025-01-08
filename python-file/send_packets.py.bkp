@@ -2,6 +2,7 @@ import time
 from scapy.all import *
 import docker
 import sys
+import random
 
 # Function to get Docker container IP address
 def get_container_ip(container_name):
@@ -31,41 +32,45 @@ if not target_ip or target_ip == "0.0.0.0":
     print("Invalid target IP address.")
     sys.exit(1)
 
+# Function to generate a random IP address
+def random_ip():
+    return ".".join(str(random.randint(1, 254)) for _ in range(4))
+
 # Packet sending functions
 def send_tcp():
-    pkt = IP(dst=target_ip)/TCP(dport=80, flags="S")
+    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=80, flags="S")
     send(pkt, verbose=False)
-    print("Sent TCP packet to", target_ip)
+    print("Sent TCP packet to", target_ip, "from", pkt[IP].src)
 
 def send_udp():
-    pkt = IP(dst=target_ip)/UDP(dport=53)/Raw(load="GET / HTTP/1.1\r\n")
+    pkt = IP(dst=target_ip, src=random_ip())/UDP(dport=53)/Raw(load="GET / HTTP/1.1\r\n")
     send(pkt, verbose=False)
-    print("Sent UDP packet to", target_ip)
+    print("Sent UDP packet to", target_ip, "from", pkt[IP].src)
 
 def send_icmp():
-    pkt = IP(dst=target_ip)/ICMP()
+    pkt = IP(dst=target_ip, src=random_ip())/ICMP()
     send(pkt, verbose=False)
-    print("Sent ICMP packet to", target_ip)
+    print("Sent ICMP packet to", target_ip, "from", pkt[IP].src)
 
 def send_ftp():
-    pkt = IP(dst=target_ip)/TCP(dport=21, flags="S")
+    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=21, flags="S")
     send(pkt, verbose=False)
-    print("Sent FTP packet to", target_ip)
+    print("Sent FTP packet to", target_ip, "from", pkt[IP].src)
 
 def send_ssh():
-    pkt = IP(dst=target_ip)/TCP(dport=22, flags="S")
+    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=22, flags="S")
     send(pkt, verbose=False)
-    print("Sent SSH packet to", target_ip)
+    print("Sent SSH packet to", target_ip, "from", pkt[IP].src)
 
 def send_telnet():
-    pkt = IP(dst=target_ip)/TCP(dport=23, flags="S")
+    pkt = IP(dst=target_ip, src=random_ip())/TCP(dport=23, flags="S")
     send(pkt, verbose=False)
-    print("Sent Telnet packet to", target_ip)
+    print("Sent Telnet packet to", target_ip, "from", pkt[IP].src)
 
 def send_arp():
-    pkt = ARP(op=1, pdst=target_ip, psrc="192.168.1.1")  # Replace with your gateway IP
+    pkt = ARP(op=1, pdst=target_ip, psrc=random_ip())  # Replace with your gateway IP
     send(pkt, verbose=False)
-    print("Sent ARP packet to", target_ip)
+    print("Sent ARP packet to", target_ip, "from", pkt[ARP].psrc)
 
 # Main function to continuously send packets
 def continuous_packets():
