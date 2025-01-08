@@ -38,9 +38,10 @@ def random_ip():
 
 # Packet sending functions
 def send_tcp(src_ip):
-    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=80, flags="S")
-    send(pkt, verbose=False)
-    print("Sent TCP packet to", target_ip, "from", pkt[IP].src)
+    for _ in range(10):  # Send more TCP packets
+        pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=443, flags="S")  # Target HTTPS port
+        send(pkt, verbose=False)
+        print("Sent TCP packet to", target_ip, "from", pkt[IP].src)
 
 def send_udp(src_ip):
     pkt = IP(dst=target_ip, src=src_ip)/UDP(dport=53)/Raw(load="GET / HTTP/1.1\r\n")
@@ -48,9 +49,10 @@ def send_udp(src_ip):
     print("Sent UDP packet to", target_ip, "from", pkt[IP].src)
 
 def send_icmp(src_ip):
-    pkt = IP(dst=target_ip, src=src_ip)/ICMP()
-    send(pkt, verbose=False)
-    print("Sent ICMP packet to", target_ip, "from", pkt[IP].src)
+    if random.randint(1, 100) <= 5:  # Reduced ICMP frequency
+        pkt = IP(dst=target_ip, src=src_ip)/ICMP()
+        send(pkt, verbose=False)
+        print("Sent ICMP packet to", target_ip, "from", pkt[IP].src)
 
 def send_ftp(src_ip):
     pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=21, flags="S")
@@ -58,14 +60,16 @@ def send_ftp(src_ip):
     print("Sent FTP packet to", target_ip, "from", pkt[IP].src)
 
 def send_ssh(src_ip):
-    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=22, flags="S")
-    send(pkt, verbose=False)
-    print("Sent SSH packet to", target_ip, "from", pkt[IP].src)
+    if random.randint(1, 100) <= 10:  # Reduced SSH frequency
+        pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=22, flags="S")
+        send(pkt, verbose=False)
+        print("Sent SSH packet to", target_ip, "from", pkt[IP].src)
 
 def send_telnet(src_ip):
-    pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=23, flags="S")
-    send(pkt, verbose=False)
-    print("Sent Telnet packet to", target_ip, "from", pkt[IP].src)
+    if random.randint(1, 100) <= 5:  # Reduced Telnet frequency
+        pkt = IP(dst=target_ip, src=src_ip)/TCP(dport=23, flags="S")
+        send(pkt, verbose=False)
+        print("Sent Telnet packet to", target_ip, "from", pkt[IP].src)
 
 def send_arp(src_ip):
     pkt = ARP(op=1, pdst=target_ip, psrc=src_ip)  # Replace with your gateway IP
@@ -82,12 +86,12 @@ def continuous_packets():
             send_tcp(current_src_ip)
             send_udp(current_src_ip)
 
-            if counter % 10 == 0:  # Every 10th iteration (10 seconds)
+            if counter % 50 == 0:  # Reduced frequency for FTP, SSH, and Telnet
                 send_ftp(current_src_ip)
                 send_ssh(current_src_ip)
                 send_telnet(current_src_ip)
 
-            if counter % 30 == 0:  # Every 30th iteration (30 seconds)
+            if counter % 100 == 0:  # Reduced frequency for ICMP
                 send_icmp(current_src_ip)
 
             if counter % 60 == 0:  # Every 60th iteration (1 minute)
